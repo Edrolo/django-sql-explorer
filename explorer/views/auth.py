@@ -16,7 +16,6 @@ class PermissionRequiredMixin:
         if app_settings.EXPLORER_LOGIN_URL():
             # Django documentation on redirecting to a login page:
             # https://docs.djangoproject.com/en/3.2/topics/auth/default/#the-raw-way
-
             return redirect('%s?%s=%s' % (
                 app_settings.EXPLORER_LOGIN_URL(),
                 REDIRECT_FIELD_NAME,

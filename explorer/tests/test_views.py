@@ -181,7 +181,7 @@ class TestQueryDetailView(TestCase):
             )
             self.assertRedirects(
                 resp, f'/custom-login/?next=/{query.id}/',
-                status_code=302, target_status_code=404
+                target_status_code=404
             )
 
     def test_individual_view_permission(self):
@@ -446,7 +446,7 @@ class TestQueryPlayground(TestCase):
             self.assertRedirects(
                 resp,
                 f'/custom-login/?next={reverse("explorer_playground")}',
-                status_code=302, target_status_code=404
+                target_status_code=404
             )
 
     def test_loads_query_from_log(self):
