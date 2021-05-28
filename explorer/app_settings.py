@@ -73,7 +73,10 @@ EXPLORER_PERMISSION_VIEW = getattr(
 EXPLORER_PERMISSION_CHANGE = getattr(
     settings, 'EXPLORER_PERMISSION_CHANGE', lambda r: r.user.is_staff
 )
-EXPLORER_LOGIN_URL = getattr(
+
+# This is callable to aid testability by dodging the settings cache.
+# There is surely a better pattern for this, but this'll hold for now.
+EXPLORER_LOGIN_URL = lambda: getattr(  # noqa
     settings, 'EXPLORER_LOGIN_URL', None
 )
 EXPLORER_RECENT_QUERY_COUNT = getattr(

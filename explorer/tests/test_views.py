@@ -172,6 +172,18 @@ class TestQueryDetailView(TestCase):
         )
         self.assertTemplateUsed(resp, 'admin/login.html')
 
+    def test_admin_required_redirects_with_login_url_setting(self):
+        self.client.logout()
+        query = SimpleQueryFactory()
+        with self.settings(EXPLORER_LOGIN_URL='/custom-login/'):
+            resp = self.client.get(
+                reverse("query_detail", kwargs={'query_id': query.id})
+            )
+            self.assertRedirects(
+                resp, f'/custom-login/?next=/{query.id}/',
+                status_code=302, target_status_code=404
+            )
+
     def test_individual_view_permission(self):
         self.client.logout()
         user = User.objects.create_user('user1', 'user@user.com', 'pwd')
@@ -426,6 +438,16 @@ class TestQueryPlayground(TestCase):
         self.client.logout()
         resp = self.client.get(reverse("explorer_playground"))
         self.assertTemplateUsed(resp, 'admin/login.html')
+
+    def test_redirect_on_admin_required_with_login_url_setting(self):
+        self.client.logout()
+        with self.settings(EXPLORER_LOGIN_URL='/custom-login/'):
+            resp = self.client.get(reverse("explorer_playground"))
+            self.assertRedirects(
+                resp,
+                f'/custom-login/?next={reverse("explorer_playground")}',
+                status_code=302, target_status_code=404
+            )
 
     def test_loads_query_from_log(self):
         querylog = QueryLogFactory()
