@@ -73,6 +73,9 @@ EXPLORER_PERMISSION_VIEW = getattr(
 EXPLORER_PERMISSION_CHANGE = getattr(
     settings, 'EXPLORER_PERMISSION_CHANGE', lambda r: r.user.is_staff
 )
+EXPLORER_LOGIN_URL = getattr(
+    settings, 'EXPLORER_LOGIN_URL', None
+)
 EXPLORER_RECENT_QUERY_COUNT = getattr(
     settings, 'EXPLORER_RECENT_QUERY_COUNT', 10
 )
