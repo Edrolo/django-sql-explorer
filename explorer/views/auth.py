@@ -2,7 +2,6 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import ImproperlyConfigured
-from django.shortcuts import redirect
 
 from explorer import permissions, app_settings
 
@@ -13,20 +12,7 @@ class PermissionRequiredMixin:
 
     @staticmethod
     def handle_no_permission(request):
-        if app_settings.EXPLORER_LOGIN_URL():
-            # Django documentation on redirecting to a login page:
-            # https://docs.djangoproject.com/en/3.2/topics/auth/default/#the-raw-way
-            return redirect('%s?%s=%s' % (
-                app_settings.EXPLORER_LOGIN_URL(),
-                REDIRECT_FIELD_NAME,
-                request.get_full_path()
-            ))
-        return SafeLoginView.as_view(
-            extra_context={
-                'title': 'Log in',
-                REDIRECT_FIELD_NAME: request.get_full_path()
-            }
-        )(request)
+        return app_settings.EXPLORER_NO_PERMISSION_VIEW()(request)
 
     def get_permission_required(self):
         if self.permission_required is None:
@@ -55,3 +41,12 @@ class PermissionRequiredMixin:
 
 class SafeLoginView(LoginView):
     template_name = 'admin/login.html'
+
+
+def save_login_view_wrapper(request):
+    return SafeLoginView.as_view(
+        extra_context={
+            'title': 'Log in',
+            REDIRECT_FIELD_NAME: request.get_full_path()
+        }
+    )

@@ -73,12 +73,6 @@ EXPLORER_PERMISSION_VIEW = getattr(
 EXPLORER_PERMISSION_CHANGE = getattr(
     settings, 'EXPLORER_PERMISSION_CHANGE', lambda r: r.user.is_staff
 )
-
-# This is callable to aid testability by dodging the settings cache.
-# There is surely a better pattern for this, but this'll hold for now.
-EXPLORER_LOGIN_URL = lambda: getattr(  # noqa
-    settings, 'EXPLORER_LOGIN_URL', None
-)
 EXPLORER_RECENT_QUERY_COUNT = getattr(
     settings, 'EXPLORER_RECENT_QUERY_COUNT', 10
 )
@@ -113,6 +107,13 @@ EXPLORER_GET_USER_QUERY_VIEWS = lambda: getattr(  # noqa
 )
 EXPLORER_TOKEN_AUTH_ENABLED = lambda: getattr(  # noqa
     settings, 'EXPLORER_TOKEN_AUTH_ENABLED', False
+)
+EXPLORER_NO_PERMISSION_VIEW = lambda: __import__(  # noqa
+    getattr(
+        settings,
+        'EXPLORER_NO_PERMISSION_VIEW',
+        'explorer.views.auth.save_login_view_wrapper',
+    ),
 )
 
 # Async task related. Note that the EMAIL_HOST settings must be set up for
