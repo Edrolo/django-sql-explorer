@@ -1,4 +1,5 @@
 from django.conf import settings
+from pydoc import locate
 
 # The 'correct' configuration for Explorer looks like:
 
@@ -108,7 +109,7 @@ EXPLORER_GET_USER_QUERY_VIEWS = lambda: getattr(  # noqa
 EXPLORER_TOKEN_AUTH_ENABLED = lambda: getattr(  # noqa
     settings, 'EXPLORER_TOKEN_AUTH_ENABLED', False
 )
-EXPLORER_NO_PERMISSION_VIEW = lambda: __import__(  # noqa
+EXPLORER_NO_PERMISSION_VIEW = lambda: locate(# noqa
     getattr(
         settings,
         'EXPLORER_NO_PERMISSION_VIEW',
