@@ -43,7 +43,7 @@ class SafeLoginView(LoginView):
     template_name = 'admin/login.html'
 
 
-def save_login_view_wrapper(request):
+def safe_login_view_wrapper(request):
     return SafeLoginView.as_view(
         extra_context={
             'title': 'Log in',

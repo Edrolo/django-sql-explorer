@@ -113,7 +113,7 @@ EXPLORER_NO_PERMISSION_VIEW = lambda: locate(# noqa
     getattr(
         settings,
         'EXPLORER_NO_PERMISSION_VIEW',
-        'explorer.views.auth.save_login_view_wrapper',
+        'explorer.views.auth.safe_login_view_wrapper',
     ),
 )
 
