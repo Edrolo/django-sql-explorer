@@ -49,4 +49,4 @@ def save_login_view_wrapper(request):
             'title': 'Log in',
             REDIRECT_FIELD_NAME: request.get_full_path()
         }
-    )
+    )(request)

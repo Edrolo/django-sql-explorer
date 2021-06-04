@@ -8,6 +8,7 @@ from django.db import connections
 from django.test import TestCase
 from django.urls import reverse
 from django.forms.models import model_to_dict
+from django.shortcuts import redirect
 
 from explorer.app_settings import (
     EXPLORER_DEFAULT_CONNECTION as CONN,
@@ -81,6 +82,10 @@ class TestQueryCreateView(TestCase):
         resp = self.client.get(reverse("query_create"))
         self.assertTemplateUsed(resp, 'explorer/query.html')
         self.assertContains(resp, "New Query")
+
+
+def custom_view(request):
+    return redirect('/custom/login')
 
 
 class TestQueryDetailView(TestCase):
@@ -172,15 +177,15 @@ class TestQueryDetailView(TestCase):
         )
         self.assertTemplateUsed(resp, 'admin/login.html')
 
-    def test_admin_required_redirects_with_login_url_setting(self):
+    def test_admin_required_with_explorer_no_permission_setting(self):
         self.client.logout()
         query = SimpleQueryFactory()
-        with self.settings(EXPLORER_LOGIN_URL='/custom-login/'):
+        with self.settings(EXPLORER_NO_PERMISSION_VIEW='explorer.tests.test_views.custom_view'):
             resp = self.client.get(
                 reverse("query_detail", kwargs={'query_id': query.id})
             )
             self.assertRedirects(
-                resp, f'/custom-login/?next=/{query.id}/',
+                resp, f'/custom/login',
                 target_status_code=404
             )
 
@@ -439,13 +444,13 @@ class TestQueryPlayground(TestCase):
         resp = self.client.get(reverse("explorer_playground"))
         self.assertTemplateUsed(resp, 'admin/login.html')
 
-    def test_redirect_on_admin_required_with_login_url_setting(self):
+    def test_admin_required_with_no_permission_view_setting(self):
         self.client.logout()
-        with self.settings(EXPLORER_LOGIN_URL='/custom-login/'):
+        with self.settings(EXPLORER_NO_PERMISSION_VIEW='explorer.tests.test_views.custom_view'):
             resp = self.client.get(reverse("explorer_playground"))
             self.assertRedirects(
                 resp,
-                f'/custom-login/?next={reverse("explorer_playground")}',
+                f'/custom/login',
                 target_status_code=404
             )
 
